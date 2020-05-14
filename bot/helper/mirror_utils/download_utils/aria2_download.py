@@ -19,6 +19,9 @@ class AriaDownloadHelper(DownloadHelper):
         with self._resource_lock:
             if self.gid == gid:
                 download = api.get_download(gid)
+                if download.total_length / 1024 / 1024 / 1024 > 25:
+                    self._listener.onDownloadError('File size larger then maximum allowed size')
+                    return
                 self.name = download.name
                 update_all_messages()
 
